@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <!-- Adaptive launchers enlarge foreground layers; this inverse scale keeps
+         the final rendered artwork at the SVG's intended size inside the mask. -->
+    <group
+        android:pivotX="256"
+        android:pivotY="256"
+        android:scaleX="0.666667"
+        android:scaleY="0.666667">
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M 362,150 A 150,150 0 1,0 362,362"
+            android:strokeColor="#334155"
+            android:strokeWidth="22"
+            android:strokeLineCap="round" />
+
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M 362,362 A 150,150 0 0,0 406,256 L 406,80"
+            android:strokeColor="#34D399"
+            android:strokeWidth="22"
+            android:strokeLineCap="round" />
+
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M 376,106 L 406,60 L 436,106"
+            android:strokeColor="#34D399"
+            android:strokeWidth="22"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+    </group>
+</vector>

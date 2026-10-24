@@ -1,0 +1,21 @@
+{
+  "format": "org.exhabere.habit-backup",
+  "formatVersion": 1,
+  "exportedAtMillis": 1791970000000,
+  "habitConfig": {
+    "id": 1,
+    "habitName": "Synthetic backup test",
+    "phase": "NOT_A_PHASE",
+    "createdAtMillis": 1791970000000,
+    "observationStartDateMillis": 1791970000000,
+    "actionPhaseStartDateMillis": null,
+    "cleanStreakStartMillis": null,
+    "defaultTimerMinutes": 5,
+    "targetObservationDays": 7,
+    "targetMasteryDays": 66,
+    "replacementPlan": "Take a short walk",
+    "approvedReliefTechniques": ["Box Breathing Exercise"]
+  },
+  "triggerLogs": [],
+  "contextTags": []
+}

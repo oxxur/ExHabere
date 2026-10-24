@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Background: Deep Slate / Midnight Blue -->
+  <rect width="512" height="512" rx="112" fill="#0F172A"/>
+
+  <!-- 1. Geometric Round Habit Loop (Muted Steel Blue) -->
+  <!-- A circular arc from 2 o'clock counter-clockwise down to 4 o'clock -->
+  <path d="M 362 150 A 150 150 0 1 0 362 362"
+        fill="none" stroke="#334155" stroke-width="22" stroke-linecap="round"/>
+
+  <!-- 2. The Upward Breakthrough Arrow (Soft Mint Green) -->
+  <!-- Begins seamlessly from the circular bottom and shoots straight UP past the break -->
+  <path d="M 362 362 A 150 150 0 0 0 406 256 L 406 80"
+        fill="none" stroke="#34D399" stroke-width="22" stroke-linecap="round"/>
+
+  <!-- Sharp Arrowhead at the top -->
+  <path d="M 376 106 L 406 60 L 436 106"
+        fill="none" stroke="#34D399" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
