@@ -271,6 +271,7 @@
     <string name="celebrate_milestone">Celebrate your %1$d-day milestone</string>
     <string name="milestone_progress">Milestone progress</string>
     <string name="days_progress">%1$d / %2$d days</string>
+    <string name="personal_best_streak">Personal best · %1$d days</string>
     <string name="milestone_accessibility">Day %1$d: %2$s, %3$s</string>
     <string name="day_number">Day %1$d</string>
     <string name="completed">completed</string>

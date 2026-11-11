@@ -20,6 +20,7 @@ object HabitBackupValidator {
             "The backup contains an invalid habit name."
         }
         require(config.defaultTimerMinutes in setOf(2, 5, 10)) { "The backup contains an invalid timer setting." }
+        require(config.bestCleanStreakMillis >= 0L) { "The backup contains an invalid best streak." }
         require(config.targetObservationDays in 1..30) { "The backup contains an invalid observation target." }
         require(config.targetMasteryDays in 21..365) { "The backup contains an invalid mastery target." }
         require(config.replacementPlan.orEmpty().length <= 300) { "The backup contains an invalid replacement plan." }

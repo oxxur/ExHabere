@@ -44,6 +44,10 @@ data class HabitConfigEntity(
     @ColumnInfo(name = "clean_streak_start_millis")
     val cleanStreakStartMillis: Long? = null,
 
+    /** Longest clean streak completed before the current streak, in milliseconds. */
+    @ColumnInfo(name = "best_clean_streak_millis", defaultValue = "0")
+    val bestCleanStreakMillis: Long = 0L,
+
     /**
      * Default countdown timer duration in minutes (typically 2, 5, or 10 min; default 5 min).
      */

@@ -71,6 +71,7 @@ object HabitBackupJsonCodec {
         .put("observationStartDateMillis", config.observationStartDateMillis)
         .put("actionPhaseStartDateMillis", config.actionPhaseStartDateMillis ?: JSONObject.NULL)
         .put("cleanStreakStartMillis", config.cleanStreakStartMillis ?: JSONObject.NULL)
+        .put("bestCleanStreakMillis", config.bestCleanStreakMillis)
         .put("defaultTimerMinutes", config.defaultTimerMinutes)
         .put("pauseOverlayPosition", config.pauseOverlayPosition.name)
         .put("targetObservationDays", config.targetObservationDays)
@@ -86,6 +87,12 @@ object HabitBackupJsonCodec {
         observationStartDateMillis = json.getLong("observationStartDateMillis"),
         actionPhaseStartDateMillis = json.getNullableLong("actionPhaseStartDateMillis"),
         cleanStreakStartMillis = json.getNullableLong("cleanStreakStartMillis"),
+        // Backups made before personal-best tracking was added start with no recorded best.
+        bestCleanStreakMillis = if (json.has("bestCleanStreakMillis")) {
+            json.getLong("bestCleanStreakMillis")
+        } else {
+            0L
+        },
         defaultTimerMinutes = json.getInt("defaultTimerMinutes"),
         // Backups created before this setting existed retain the default centered position.
         pauseOverlayPosition = if (json.has("pauseOverlayPosition")) {

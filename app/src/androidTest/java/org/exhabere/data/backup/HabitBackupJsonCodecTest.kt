@@ -17,7 +17,8 @@ class HabitBackupJsonCodecTest {
             exportedAtMillis = 10L,
             habitConfig = HabitConfigEntity(
                 habitName = "Habit",
-                pauseOverlayPosition = PauseOverlayPosition.BOTTOM
+                pauseOverlayPosition = PauseOverlayPosition.BOTTOM,
+                bestCleanStreakMillis = 123_456L
             ),
             triggerLogs = emptyList(),
             contextTags = emptyList()
@@ -26,6 +27,7 @@ class HabitBackupJsonCodecTest {
         val restored = HabitBackupJsonCodec.decode(HabitBackupJsonCodec.encode(backup))
 
         assertEquals(PauseOverlayPosition.BOTTOM, restored.habitConfig.pauseOverlayPosition)
+        assertEquals(123_456L, restored.habitConfig.bestCleanStreakMillis)
     }
 
     @Test
@@ -39,9 +41,11 @@ class HabitBackupJsonCodecTest {
         )
         val json = JSONObject(HabitBackupJsonCodec.encode(backup))
         json.getJSONObject("habitConfig").remove("pauseOverlayPosition")
+        json.getJSONObject("habitConfig").remove("bestCleanStreakMillis")
 
         val restored = HabitBackupJsonCodec.decode(json.toString())
 
         assertEquals(PauseOverlayPosition.MIDDLE, restored.habitConfig.pauseOverlayPosition)
+        assertEquals(0L, restored.habitConfig.bestCleanStreakMillis)
     }
 }

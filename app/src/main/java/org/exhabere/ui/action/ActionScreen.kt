@@ -28,7 +28,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -137,6 +136,8 @@ fun ActionScreen(
                     MilestoneProgress(
                         cleanDays = cleanDays,
                         targetDays = targetDays,
+                        currentStreakMillis = elapsed,
+                        bestStreakMillis = maxOf(state.config?.bestCleanStreakMillis ?: 0L, elapsed),
                         milestones = state.milestones
                     )
                     Text(stringResource(R.string.current_clean_time), style = MaterialTheme.typography.titleMedium)
@@ -214,11 +215,17 @@ fun ActionScreen(
 private fun MilestoneProgress(
     cleanDays: Int,
     targetDays: Int,
+    currentStreakMillis: Long,
+    bestStreakMillis: Long,
     milestones: List<MilestoneState>
 ) {
     val coroutineScope = rememberCoroutineScope()
     val safeTarget = targetDays.coerceAtLeast(1)
-    val progress = (cleanDays.toFloat() / safeTarget).coerceIn(0f, 1f)
+    val targetMillis = safeTarget.toLong() * MILLIS_PER_DAY
+    val progress = (currentStreakMillis.toFloat() / targetMillis.toFloat()).coerceIn(0f, 1f)
+    val bestDays = (bestStreakMillis / MILLIS_PER_DAY).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+    val bestProgress = (bestStreakMillis.toFloat() / targetMillis.toFloat()).coerceIn(0f, 1f)
+    val bestDescription = stringResource(R.string.personal_best_streak, bestDays)
     val density = LocalDensity.current
     val fontScale = density.fontScale.coerceAtLeast(1f)
     val tooltipEdgeMarginPx = with(density) { 8.dp.roundToPx() }
@@ -249,6 +256,14 @@ private fun MilestoneProgress(
         }
     }
 
+    if (bestStreakMillis > 0L) {
+        Text(
+            bestDescription,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+
     val markerSize = (28.dp * fontScale).coerceAtMost(40.dp)
         .coerceAtLeast(28.dp)
     val labelHeight = 18.dp * fontScale
@@ -258,17 +273,41 @@ private fun MilestoneProgress(
         val labelWidth = (28.dp * fontScale).coerceAtMost(maxWidth / 3).coerceAtLeast(28.dp)
         val markerTravel = (maxWidth - markerSize).coerceAtLeast(0.dp)
 
-        LinearProgressIndicator(
-            progress = { progress },
+        BoxWithConstraints(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = (markerSize / 2 - 2.dp).coerceAtLeast(8.dp))
                 .fillMaxWidth()
                 .padding(horizontal = markerSize / 2)
-                .height(4.dp),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+                .height(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .fillMaxWidth(progress)
+                    .height(4.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+            )
+            if (bestStreakMillis > 0L) {
+                val bestMarkerOffset = (maxWidth * bestProgress - 1.dp)
+                    .coerceIn(0.dp, (maxWidth - 2.dp).coerceAtLeast(0.dp))
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .offset(x = bestMarkerOffset)
+                        .size(width = 2.dp, height = 10.dp)
+                        .background(androidx.compose.ui.graphics.Color(0xFF059669), CircleShape)
+                        .semantics {
+                            contentDescription = bestDescription
+                        }
+                )
+            }
+        }
 
         milestones.forEach { milestone ->
             val fraction = (milestone.day.toFloat() / safeTarget).coerceIn(0f, 1f)

@@ -121,7 +121,7 @@ class RepositoryPersistenceTest {
 
     @Test
     fun gaveInOutcomeIsPersistedAndResetsCleanStreak() = runBlocking {
-        val oldStreakStart = 123L
+        val oldStreakStart = System.currentTimeMillis() - 7L * 24L * 60L * 60L * 1_000L
         database.habitConfigDao().upsertHabitConfig(
             testConfig(phase = HabitPhase.ACTION, cleanStreakStartMillis = oldStreakStart)
         )
@@ -135,6 +135,13 @@ class RepositoryPersistenceTest {
         val updatedConfig = database.habitConfigDao().getHabitConfig()
         assertNotNull(updatedConfig)
         assertTrue(updatedConfig!!.cleanStreakStartMillis!! > oldStreakStart)
+        assertTrue(updatedConfig.bestCleanStreakMillis >= 7L * 24L * 60L * 60L * 1_000L)
+        val recordedBest = updatedConfig.bestCleanStreakMillis
+        database.habitConfigDao().upsertHabitConfig(
+            updatedConfig.copy(cleanStreakStartMillis = System.currentTimeMillis() - 24L * 60L * 60L * 1_000L)
+        )
+        database.habitConfigDao().resetCleanStreak(System.currentTimeMillis())
+        assertEquals(recordedBest, database.habitConfigDao().getHabitConfig()?.bestCleanStreakMillis)
 
         val savedLog = database.triggerLogDao().getRecentLogs(1).single()
         assertEquals(TriggerPhaseOrigin.ACTION, savedLog.phaseOrigin)

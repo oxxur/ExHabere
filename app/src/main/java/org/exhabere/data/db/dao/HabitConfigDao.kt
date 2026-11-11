@@ -57,7 +57,7 @@ interface HabitConfigDao {
     @Query("UPDATE habit_config SET replacement_plan = :plan, approved_relief_techniques = :techniques, default_timer_minutes = :minutes WHERE id = 1")
     suspend fun updateGuidedPlan(plan: String, techniques: List<String>, minutes: Int)
 
-    @Query("UPDATE habit_config SET clean_streak_start_millis = :cleanStreakStart WHERE id = 1")
+    @Query("UPDATE habit_config SET best_clean_streak_millis = MAX(best_clean_streak_millis, CASE WHEN clean_streak_start_millis IS NULL THEN 0 ELSE MAX(0, :cleanStreakStart - clean_streak_start_millis) END), clean_streak_start_millis = :cleanStreakStart WHERE id = 1")
     suspend fun resetCleanStreak(cleanStreakStart: Long)
 
     @Query("DELETE FROM habit_config")

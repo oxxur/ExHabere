@@ -46,11 +46,12 @@ class DatabaseMigrationTest {
 
         helper.runMigrationsAndValidate(
             TEST_DATABASE,
-            4,
+            5,
             true,
             AppDatabase.MIGRATION_1_2,
             AppDatabase.MIGRATION_2_3,
-            AppDatabase.MIGRATION_3_4
+            AppDatabase.MIGRATION_3_4,
+            AppDatabase.MIGRATION_4_5
         ).use { db ->
             db.query("SELECT id, phase_origin, outcome_type, notes FROM trigger_logs ORDER BY id").use { cursor ->
                 assertEquals(4, cursor.count)
@@ -75,13 +76,19 @@ class DatabaseMigrationTest {
             }
             db.query("PRAGMA table_info(habit_config)").use { cursor ->
                 var foundPosition = false
+                var foundBestStreak = false
                 while (cursor.moveToNext()) {
                     if (cursor.getString(1) == "pause_overlay_position") {
                         foundPosition = true
                         assertEquals("'MIDDLE'", cursor.getString(4))
                     }
+                    if (cursor.getString(1) == "best_clean_streak_millis") {
+                        foundBestStreak = true
+                        assertEquals("0", cursor.getString(4))
+                    }
                 }
                 assertEquals(true, foundPosition)
+                assertEquals(true, foundBestStreak)
             }
         }
     }
